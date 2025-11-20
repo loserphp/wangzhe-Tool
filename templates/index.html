@@ -3,28 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>王者荣耀隐藏分查询+随机出装+今日运势</title>
+    <title>王者荣耀隐藏分查询神器</title>
     <style>
         body { font-family: 微信表情; background: linear-gradient(135deg,#667eea,#764ba2); color:white; text-align:center; padding:20px;}
-        input, button { padding:15px; margin:10px; font-size:18px; border-radius:10px;}
+        input, button, select { padding:15px; margin:10px; font-size:18px; border-radius:10px; width:80%;}
         button { background:#ffdb00; border:none; cursor:pointer;}
         h1 { font-size:28px;}
+        #payQR { display:none; margin:20px; }
     </style>
 </head>
 <body>
     <h1>王者荣耀三合一神器</h1>
     <p>隐藏分查询 + 随机搞笑出装 + 今日运势</p>
-    <form action="/query" method="post">
+    <p id="counter">您今天已免费查询 <span id="count">0</span>/3 次</p>
+    
+    <form id="queryForm">
         <input type="text" name="name" placeholder="输入游戏昵称" required><br>
-        <select name="area" required style="padding:15px; margin:10px; font-size:18px; border-radius:10px; width:80%;">
-            <option value="">选择你的大区</option>
-            <option value="微信区">微信区（所有微信登录）</option>
-            <option value="QQ区">QQ区（所有QQ登录）</option>
-        </select>
+        <select name="area" required>
+            <option value="">选择大区</option>
+            <option value="微信区">微信区</option>
+            <option value="QQ区">QQ区</option>
+        </select><br>
         <button type="submit">立即查询（免费）</button>
     </form>
-   
-    <!-- 下面这两行是广告位，后面直接赚大钱 -->
-    <p>广告位招租：日IP 10w+，联系WX：xxxxxxxx</p>
+
+    <!-- 付费二维码（把你的微信/支付宝收款码换成这里） -->
+    <div id="payQR">
+        <h2 style="color:red;">免费次数已用完！9.9元解锁终身无限查</h2>
+        <img src="/static/weixin_qr.jpg" width="280" height="280">
+        <p style="font-size:28px;">长按扫码付款9.9（备注：王者）</p>
+        <p>付款后自动解锁无限查询！今天已帮500+人解锁</p>
+    </div>
+
+    <script>
+        // localStorage计数器
+        let count = localStorage.getItem('queryCount') ? parseInt(localStorage.getItem('queryCount')) : 0;
+        document.getElementById('count').innerText = count;
+
+        document.getElementById('queryForm').onsubmit = function(e) {
+            if (count >= 3) {
+                e.preventDefault();
+                document.getElementById('payQR').style.display = 'block';
+                alert('免费次数已用完！9.9解锁终身无限查～');
+                return false;
+            }
+            
+            // 正常提交表单（直接跳转到/result.html也行，或者用ajax，这里用form action）
+            count++;
+            localStorage.setItem('queryCount', count);
+            document.getElementById('count').innerText = count;
+            
+            // 如果你想直接用ajax提交不刷新页面，我下面再给你
+            return true;
+        };
+
+        // 付款成功后客户手动刷新就重置（或者你教他清浏览器缓存）
+        if (count >= 3) {
+            document.getElementById('payQR').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
