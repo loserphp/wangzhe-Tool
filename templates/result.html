@@ -1,34 +1,47 @@
-<script>
-    // 如果已付费（客户手动清localStorage或你教他运行这行）
-    if (localStorage.getItem('unlimited') === 'true') {
-        localStorage.setItem('queryCount', 0); // 重置计数
-    }
-</script>
-<h2 style="color:gold;">恭喜！您已解锁终身无限查 ✨</h2>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>查询结果</title>
+    <style> 
+        body {background: #000; color:#ffdb00; text-align:center; padding:20px; font-size:20px; line-height:2;} 
+        ul {list-style:none; padding:0;}
+    </style>
+</head>
+<body>
+    <script>
+        // 付款后客户运行这行解锁（你微信发给他）
+        if (localStorage.getItem('unlimited') === 'true') {
+            localStorage.setItem('queryCount', '0');
+        }
+    </script>
 
-<div style="margin:30px auto; text-align:center;">
-    <!-- 直接调用静态资源，加载飞快，永不失效 -->
-    <img src="/static/weixin_qr.jpg" alt="微信二维码" 
-         width="280" height="280" 
-         style="border:5px solid #ffdb00; border-radius:15px; box-shadow:0 0 20px gold;">
-    <p style="font-size:28px; color:#ffdb00; margin-top:10px;">
-        ↑ 长按扫码立即加我（9.9秒到账）↑
-    </p>
-    <p style="color:red; font-size:18px;">今天已帮127人领取了9.9福利包，手慢无！</p>
-</div>
+    {% if not request.cookies.get('paid') %}  <!-- 可选后端判断 -->
+    <h2 style="color:gold;">恭喜！查询成功 ✨</h2>
+    {% endif %}
 
-<!-- 备用复制微信号 -->
-<p style="font-size:20px;">或直接复制微信号添加：<b>你的微信号</b></p>
-<button onclick="copyWX(MFC_xiaoming)" style="padding:15px; background:#07c160; color:white; font-size:20px; border:none; border-radius:10px;">
-    一键复制微信号
-</button>
+    <h1>{{ name }}（{{ area }}）</h1>
+    <h2>隐藏分：{{ hidden }}（超高！区前1%）</h2>
+    <h2>今日预测：{{ predict }}</h2>
+    <h2>随机搞笑出装：</h2>
+    <ul>
+    {% for item in outfit %}
+        <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+    <h2>今日王者运势：{{ fortune }}</h2>
 
-<script>
-function copyWX() {
-    navigator.clipboard.writeText("MFC_xiaoming");
-    alert("微信号已复制！打开微信添加我，马上发福利包！");
-}
-</script>
+    <hr style="border-color:gold;">
+    <h2>想要终身无限查 + 专属9.9资源包？</h2>
+    <div style="margin:30px auto; text-align:center;">
+        <img src="/static/weixin_qr.jpg" width="280" height="280" style="border:5px solid gold; border-radius:15px;">
+        <p style="font-size:28px; color:#ffdb00;">↑ 长按扫码付款9.9 ↑</p>
+        <p style="color:red;">付款后告诉我，我立即解锁无限查 + 发大礼包！</p>
+    </div>
 
-<!-- 制造紧迫感 -->
-<p style="color:red; font-size:18px;">今天已帮256人领取了9.9福利包，手慢无！</p>
+    <script>
+        // 付款后你教客户复制这行到地址栏回车解锁
+        console.log("付款后复制这行到地址栏回车：javascript:localStorage.setItem('unlimited','true');localStorage.setItem('queryCount','0');alert('解锁成功！刷新页面无限查');location.reload()");
+    </script>
+</body>
+</html>
