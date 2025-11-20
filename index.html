@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王者荣耀隐藏分查询神器</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg,#667eea,#764ba2); color:white; text-align:center; padding:20px;}
+        input, button, select { padding:15px; margin:10px; font-size:18px; border-radius:10px; width:80%;}
+        button { background:#ffdb00; border:none; cursor:pointer;}
+        h1 { font-size:28px;}
+        #payQR { display:none; margin:30px auto; text-align:center; }
+    </style>
+</head>
+<body>
+    <h1>王者荣耀三合一神器</h1>
+    <p>隐藏分查询 + 随机搞笑出装 + 今日运势</p>
+    <p id="counter">您已免费查询 <span id="count">0</span>/3 次</p>
+    
+    <form id="queryForm" action="/query" method="post">
+        <input type="text" name="name" placeholder="输入游戏昵称" required><br>
+        <select name="area" required>
+            <option value="">选择大区</option>
+            <option value="微信区">微信区</option>
+            <option value="QQ区">QQ区</option>
+        </select><br>
+        <button type="submit">立即查询</button>
+    </form>
+
+    <div id="payQR">
+        <h2 style="color:red;">免费次数已用完！9.9元解锁终身无限查</h2>
+        <img src="/static/weixin_qr.jpg" width="280" height="280">
+        <p style="font-size:24px;">长按扫码付款9.9（备注王者）</p>
+        <p style="color:yellow;">付款后刷新页面自动解锁无限查！</p>
+    </div>
+
+    <script>
+        let count = localStorage.getItem('queryCount') ? parseInt(localStorage.getItem('queryCount')) : 0;
+        document.getElementById('count').innerText = count;
+
+        // 如果已付费，显示解锁信息
+        if (localStorage.getItem('unlimited') === 'true') {
+            count = 0;
+            localStorage.setItem('queryCount', 0);
+        }
+
+        document.getElementById('queryForm').onsubmit = function(e) {
+            if (count >= 3 && localStorage.getItem('unlimited') !== 'true') {
+                e.preventDefault();
+                document.getElementById('payQR').style.display = 'block';
+                alert('免费次数已用完！9.9解锁终身无限查～');
+                return false;
+            }
+            count++;
+            localStorage.setItem('queryCount', count);
+            document.getElementById('count').innerText = count;
+        };
+
+        if (count >= 3 && localStorage.getItem('unlimited') !== 'true') {
+            document.getElementById('payQR').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
